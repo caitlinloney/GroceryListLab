@@ -11,11 +11,11 @@
     tools:context=".MainActivity" >
 
     <EditText
-        android:id="@+id/queryEditText"
+        android:id="@+id/groceryItemEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="fill_horizontal"
-        android:hint="@string/queryPrompt"
+        android:hint="@string/itemPrompt"
         android:imeOptions="actionNext" >
          
         <requestFocus/>
@@ -25,12 +25,12 @@
         android:layout_gravity="fill_horizontal" >
 
         <EditText
-            android:id="@+id/tagEditText"
+            android:id="@+id/amountEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|fill_horizontal"
             android:layout_weight="1"
-            android:hint="@string/tagPrompt"
+            android:hint="@string/amountPrompt"
             android:imeOptions="actionDone" />
 
         <ImageButton
@@ -57,14 +57,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="fill_horizontal"
             android:gravity="center_horizontal"
-            android:text="@string/taggedSearches"
+            android:text="@string/groceryItems"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="fill"
             android:layout_marginBottom="@dimen/tagged_searches_padding"
             android:layout_marginTop="@dimen/tagged_searches_padding"
             android:layout_weight="1" />

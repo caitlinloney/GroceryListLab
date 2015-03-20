@@ -32,7 +32,7 @@ public class MainActivity extends ListActivity
    
    private EditText queryEditText; // EditText where user enters a query
    private EditText tagEditText; // EditText where user tags a query
-   private SharedPreferences savedSearches; // user's favorite searches
+   private SharedPreferences groceryItems; // user's favorite searches
    private ArrayList<String> tags; // list of tags for saved searches
    private ArrayAdapter<String> adapter; // binds tags to ListView
    
@@ -44,15 +44,15 @@ public class MainActivity extends ListActivity
       setContentView(R.layout.activity_main);
 
       // get references to the EditTexts  
-      queryEditText = (EditText) findViewById(R.id.queryEditText);
-      tagEditText = (EditText) findViewById(R.id.tagEditText);
+      queryEditText = (EditText) findViewById(R.id.groceryItemEditText);
+      tagEditText = (EditText) findViewById(R.id.amountEditText);
       
       // get the SharedPreferences containing the user's saved searches 
-      savedSearches = getSharedPreferences(SEARCHES, MODE_PRIVATE); 
+      groceryItems = getSharedPreferences(SEARCHES, MODE_PRIVATE);
 
       // store the saved tags in an ArrayList then sort them
-      tags = new ArrayList<String>(savedSearches.getAll().keySet());
-      Collections.sort(tags, String.CASE_INSENSITIVE_ORDER); 
+      tags = new ArrayList<String>(groceryItems.getAll().keySet());
+      Collections.sort(tags, String.CASE_INSENSITIVE_ORDER);
       
       // create ArrayAdapter and use it to bind tags to the ListView
       adapter = new ArrayAdapter<String>(this, R.layout.list_item, tags);
@@ -80,14 +80,14 @@ public class MainActivity extends ListActivity
          if (queryEditText.getText().length() > 0 &&
             tagEditText.getText().length() > 0)
          {
-            addTaggedSearch(queryEditText.getText().toString(), 
+            addTaggedSearch(queryEditText.getText().toString(),
                tagEditText.getText().toString());
             queryEditText.setText(""); // clear queryEditText
             tagEditText.setText(""); // clear tagEditText
             
             ((InputMethodManager) getSystemService(
                Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-               tagEditText.getWindowToken(), 0);  
+               tagEditText.getWindowToken(), 0);
          } 
          else // display message asking user to provide a query and a tag
          {
@@ -112,8 +112,8 @@ public class MainActivity extends ListActivity
    private void addTaggedSearch(String query, String tag)
    {
       // get a SharedPreferences.Editor to store new tag/query pair
-      SharedPreferences.Editor preferencesEditor = savedSearches.edit();
-      preferencesEditor.putString(tag, query); // store current search
+      SharedPreferences.Editor preferencesEditor = groceryItems.edit();
+      preferencesEditor.putString(query, tag); // store current search
       preferencesEditor.apply(); // store the updated preferences
       
       // if tag is new, add to and sort tags, then display updated list
@@ -132,16 +132,10 @@ public class MainActivity extends ListActivity
       public void onItemClick(AdapterView<?> parent, View view, 
          int position, long id) 
       {
-         // get query string and create a URL representing the search
+         // toggle grocery item check box
          String tag = ((TextView) view).getText().toString();
-         String urlString = getString(R.string.searchURL) +
-            Uri.encode(savedSearches.getString(tag, ""), "UTF-8");
-         
-         // create an Intent to launch a web browser    
-         Intent webIntent = new Intent(Intent.ACTION_VIEW, 
-            Uri.parse(urlString));                      
 
-         startActivity(webIntent); // launches web browser to view results
+
       } 
    }; // end itemClickListener declaration
    
@@ -183,7 +177,7 @@ public class MainActivity extends ListActivity
                            // set EditTexts to match chosen tag and query
                            tagEditText.setText(tag);
                            queryEditText.setText(
-                              savedSearches.getString(tag, ""));
+                                   groceryItems.getString(tag, ""));
                            break;
                         case 2: // delete
                            deleteSearch(tag);
@@ -215,7 +209,7 @@ public class MainActivity extends ListActivity
    {
       // create the URL representing the search
       String urlString = getString(R.string.searchURL) +
-         Uri.encode(savedSearches.getString(tag, ""), "UTF-8");
+         Uri.encode(groceryItems.getString(tag, ""), "UTF-8");
 
       // create Intent to share urlString
       Intent shareIntent = new Intent();
@@ -264,7 +258,7 @@ public class MainActivity extends ListActivity
                
                // get SharedPreferences.Editor to remove saved search
                SharedPreferences.Editor preferencesEditor = 
-                  savedSearches.edit();                   
+                  groceryItems.edit();
                preferencesEditor.remove(tag); // remove search
                preferencesEditor.apply(); // saves the changes
 
